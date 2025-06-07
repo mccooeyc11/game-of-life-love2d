@@ -7,9 +7,9 @@ function love.load()
     love.graphics.setColor(0,0,0,1)
 
     map = {
+        {0, 0, 1, 0, 0},
         {0, 1, 1, 0, 0},
-        {1, 1, 0, 0, 0},
-        {0, 0, 0, 0, 0},
+        {0, 0, 1, 0, 0},
         {0, 0, 0, 1, 0},
         {0, 0, 0, 0, 0}
     }
@@ -55,16 +55,23 @@ function updateCell(map, x, y)
     -- Get number of alive neighbours
     aliveNeighbours = 0
 
-    if x-1 >= 1 and y-1 >= 1 then aliveNeighbours = aliveNeighbours + map[x-1][y-1] end               -- Top left neighbour
-    if y-1 >= 1 then aliveNeighbours = aliveNeighbours + map[x][y-1] end                              -- Top centre
-    if x+1 <= gridSize and y-1 >= 1 then aliveNeighbours = aliveNeighbours + map[x+1][y-1] end        -- Top right
+    if y-1 >= 1 then
+        if x-1 >= 1 then aliveNeighbours = aliveNeighbours + map[x-1][y-1] end                     -- Top left neighbour
+        aliveNeighbours = aliveNeighbours + map[x][y-1]                                            -- Top centre
+        if x+1 <= gridSize and y-1 >= 1 then aliveNeighbours = aliveNeighbours + map[x+1][y-1] end -- Top right
+    end
 
-    if x-1 >= 1 then aliveNeighbours = aliveNeighbours + map[x-1][y] end                              -- Centre left
-    if x+1 <= gridSize then aliveNeighbours = aliveNeighbours + map[x+1][y] end                       -- Centre right
 
-    if x-1 >= 1 and y+1 <= gridSize then aliveNeighbours = aliveNeighbours + map[x-1][y+1] end        -- Top left neighbour
-    if y+1 <= gridSize then aliveNeighbours = aliveNeighbours + map[x][y+1] end                       -- Top centre
-    if x+1 <= gridSize and y+1 <= gridSize then aliveNeighbours = aliveNeighbours + map[x+1][y+1] end -- Top right
+    if x-1 >= 1 then aliveNeighbours = aliveNeighbours + map[x-1][y] end                           -- Centre left
+    if x+1 <= gridSize then aliveNeighbours = aliveNeighbours + map[x+1][y] end                    -- Centre right
+
+    if y+1 <= gridSize then
+        if x-1 >= 1 then aliveNeighbours = aliveNeighbours + map[x-1][y+1] end                     -- Top left neighbour
+        aliveNeighbours = aliveNeighbours + map[x][y+1]                                            -- Top centre
+        if x+1 <= gridSize then aliveNeighbours = aliveNeighbours + map[x+1][y+1] end              -- Top right
+    end
+
+
 
     if aliveNeighbours == 3 then -- If 3 alive neighbours, cell stays/becomes alive
         map[x][y] = 1
