@@ -2,6 +2,7 @@ function love.load()
     -- Declare and initialise variables
     cellSize = 64 -- Default cell size
     genTime = 10 -- Number of frames for each generation
+    currentGen = 0 -- Current generation
 
     love.graphics.setBackgroundColor(1,1,1,1)
     love.graphics.setColor(0,0,0,1)
@@ -26,7 +27,8 @@ function love.update(dt)
 end
 
 function love.draw()
-
+    -- Draw generation counter below grid
+    love.graphics.print("Generation "..currentGen, 0, cellSize*gridSize)
     -- Draw grid
     for y=1, #map do
         for x=1, #map[y] do
@@ -39,15 +41,19 @@ end
 
 --FOR TESTING --
 function love.mousepressed( x, y, button, istouch, presses )
-    -- Update all cells on mouse click
+    updateGrid(map)
+end
+-- FOR TESTING --
+
+function updateGrid(map)
     for y=1, #map do
         for x=1, #map[y] do
             print("Updating cell ("..x..","..y..")...")
             updateCell(map, x, y)
         end
     end
+    currentGen = currentGen + 1
 end
--- FOR TESTING --
 
 function updateCell(map, x, y)
     print("\tInitial value: "..map[x][y])
