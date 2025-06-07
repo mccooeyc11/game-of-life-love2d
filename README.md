@@ -7,7 +7,7 @@ The traditional game is set on an infinite grid, but this version is set on a fi
 - Player sets out seed at beginning
 - ~Step through generations~
 - Autoplay generations
-- Generation counter
+- ~Generation counter~
 - Controls help/legend
 - Resizable window
 - Support for rectangular grid sizes
