@@ -51,24 +51,13 @@ end
 
 function updateGrid(map)
     -- Initialise buffer
---     buffer = {}
---     bufferRow = {}
---
---     for i=1, gridSize do
---         table.insert(bufferRow, 2) --2 to ensure all cells in buffer are replaced
---     end
---     for i=1, gridSize do
---         table.insert(buffer, bufferRow)
---     end
-    --TEMPORARY WAY TO DO THIS
-    buffer = {
-        {2, 2, 2, 2, 2},
-        {2, 2, 2, 2, 2},
-        {2, 2, 2, 2, 2},
-        {2, 2, 2, 2, 2},
-        {2, 2, 2, 2, 2}
-    }
-
+    buffer = {}
+    for i=1, gridSize do
+        table.insert(buffer, {})
+        for j=1, gridSize do
+            table.insert(buffer[i],2)
+        end
+    end
 
     -- Update cells
     for y=1, #map do
