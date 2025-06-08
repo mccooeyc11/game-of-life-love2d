@@ -50,19 +50,46 @@ end
 -- FOR TESTING --
 
 function updateGrid(map)
+    -- Initialise buffer
+--     buffer = {}
+--     bufferRow = {}
+--
+--     for i=1, gridSize do
+--         table.insert(bufferRow, 2) --2 to ensure all cells in buffer are replaced
+--     end
+--     for i=1, gridSize do
+--         table.insert(buffer, bufferRow)
+--     end
+    --TEMPORARY WAY TO DO THIS
+    buffer = {
+        {2, 2, 2, 2, 2},
+        {2, 2, 2, 2, 2},
+        {2, 2, 2, 2, 2},
+        {2, 2, 2, 2, 2},
+        {2, 2, 2, 2, 2}
+    }
+
+
     -- Update cells
     for y=1, #map do
         for x=1, #map[y] do
             print("Updating cell ("..x..","..y..")...")
-            updateCell(map, x, y)
-            printGrid(map)
+            updateCell(map, buffer, x, y)
+            printGrid(buffer)
         end
     end
 
+    -- Move buffer to display map
+    for y=1, #map do
+        for x=1, #map[y] do
+            map[y][x] = buffer[y][x]
+        end
+    end
+    -- Increment generation
     currentGen = currentGen + 1
 end
 
-function updateCell(map, x, y)
+function updateCell(map, buffer, x, y)
     print("\tInitial value: "..map[y][x])
 
     -- Get number of alive neighbours
@@ -87,14 +114,14 @@ function updateCell(map, x, y)
     print("\tLiving neighbours: "..aliveNeighbours)
 
     if aliveNeighbours == 3 then -- If 3 alive neighbours, cell stays/becomes alive
-        map[y][x] = 1
+        buffer[y][x] = 1
     elseif aliveNeighbours == 2 and map[y][x] == 1 then -- If 2 alive neighbours AND cell is already alive, stay that way
-        map[y][x] = 1
+        buffer[y][x] = 1
     else -- Otherwise, cell is dead :(
-        map[y][x] = 0
+        buffer[y][x] = 0
     end
 
-    print("\tNew value: "..map[y][x])
+    print("\tNew value: "..buffer[y][x])
 end
 
 function printGrid(grid) -- FOR TESTING
