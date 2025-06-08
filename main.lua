@@ -1,17 +1,18 @@
 function love.load()
-    -- Declare and initialise variables
+    -- Set colours
+    love.graphics.setBackgroundColor(1,1,1,1)
+    love.graphics.setColor(0,0,0,1)
+
+    -- Declare and initialise game variables
     cellSize = 64 -- Default cell size
     genTime = 10 -- Number of frames for each generation
     currentGen = 0 -- Current generation
 
-    love.graphics.setBackgroundColor(1,1,1,1)
-    love.graphics.setColor(0,0,0,1)
-
     map = {
+        {0, 0, 0, 0, 0},
         {0, 0, 1, 0, 0},
         {0, 1, 1, 0, 0},
-        {0, 0, 1, 0, 0},
-        {0, 0, 0, 1, 0},
+        {0, 0, 1, 1, 0},
         {0, 0, 0, 0, 0}
     }
 
@@ -27,6 +28,7 @@ function love.update(dt)
 end
 
 function love.draw()
+
     -- Draw generation counter below grid
     love.graphics.print("Generation "..currentGen, 0, cellSize*gridSize)
     -- Draw grid
@@ -46,47 +48,60 @@ end
 -- FOR TESTING --
 
 function updateGrid(map)
+    -- Update cells
     for y=1, #map do
         for x=1, #map[y] do
             print("Updating cell ("..x..","..y..")...")
             updateCell(map, x, y)
+            printGrid(map)
         end
     end
+
     currentGen = currentGen + 1
 end
 
 function updateCell(map, x, y)
-    print("\tInitial value: "..map[x][y])
+    print("\tInitial value: "..map[y][x])
 
     -- Get number of alive neighbours
     aliveNeighbours = 0
 
     if y-1 >= 1 then
-        if x-1 >= 1 then aliveNeighbours = aliveNeighbours + map[x-1][y-1] end                     -- Top left neighbour
-        aliveNeighbours = aliveNeighbours + map[x][y-1]                                            -- Top centre
-        if x+1 <= gridSize and y-1 >= 1 then aliveNeighbours = aliveNeighbours + map[x+1][y-1] end -- Top right
+        if x-1 >= 1 then aliveNeighbours = aliveNeighbours + map[y-1][x-1] end                     -- Top left neighbour
+        aliveNeighbours = aliveNeighbours + map[y-1][x]                                            -- Top centre
+        if x+1 <= gridSize and y-1 >= 1 then aliveNeighbours = aliveNeighbours + map[y-1][x+1] end -- Top right
     end
 
 
-    if x-1 >= 1 then aliveNeighbours = aliveNeighbours + map[x-1][y] end                           -- Centre left
-    if x+1 <= gridSize then aliveNeighbours = aliveNeighbours + map[x+1][y] end                    -- Centre right
+    if x-1 >= 1 then aliveNeighbours = aliveNeighbours + map[y][x-1] end                           -- Centre left
+    if x+1 <= gridSize then aliveNeighbours = aliveNeighbours + map[y][x+1] end                    -- Centre right
 
     if y+1 <= gridSize then
-        if x-1 >= 1 then aliveNeighbours = aliveNeighbours + map[x-1][y+1] end                     -- Top left neighbour
-        aliveNeighbours = aliveNeighbours + map[x][y+1]                                            -- Top centre
-        if x+1 <= gridSize then aliveNeighbours = aliveNeighbours + map[x+1][y+1] end              -- Top right
+        if x-1 >= 1 then aliveNeighbours = aliveNeighbours + map[y+1][x-1] end                     -- Top left neighbour
+        aliveNeighbours = aliveNeighbours + map[y+1][x]                                            -- Top centre
+        if x+1 <= gridSize then aliveNeighbours = aliveNeighbours + map[y+1][x+1] end              -- Top right
     end
 
-
+    print("\tLiving neighbours: "..aliveNeighbours)
 
     if aliveNeighbours == 3 then -- If 3 alive neighbours, cell stays/becomes alive
-        map[x][y] = 1
-    elseif aliveNeighbours == 2 and map[x][y] == 1 then -- If 2 alive neighbours AND cell is already alive, stay that way
-        map[x][y] = 1
+        map[y][x] = 1
+    elseif aliveNeighbours == 2 and map[y][x] == 1 then -- If 2 alive neighbours AND cell is already alive, stay that way
+        map[y][x] = 1
     else -- Otherwise, cell is dead :(
-        map[x][y] = 0
+        map[y][x] = 0
     end
 
-    print("\tNew value: "..map[x][y])
+    print("\tNew value: "..map[y][x])
 end
 
+function printGrid(grid) -- FOR TESTING
+    for y=1, #grid do
+        row = "{"
+        for x=1, #grid[y] do
+            row = row..grid[y][x]..","
+        end
+        row = row.."},"
+        print(row)
+    end
+end
