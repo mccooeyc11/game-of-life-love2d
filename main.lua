@@ -30,12 +30,14 @@ end
 function love.draw()
 
     -- Draw generation counter below grid
-    love.graphics.print("Generation "..currentGen, 0, cellSize*gridSize)
+    love.graphics.print("Generation "..currentGen, 0, cellSize*(gridSize + 1))
     -- Draw grid
     for y=1, #map do
         for x=1, #map[y] do
             if map[y][x] == 1 then
                 love.graphics.rectangle("fill", x * cellSize, y * cellSize, cellSize, cellSize)
+            else
+                love.graphics.rectangle("line", x * cellSize, y * cellSize, cellSize, cellSize)
             end
         end
     end
